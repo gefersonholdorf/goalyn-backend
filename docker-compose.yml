@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  postgresql:
+    container_name: db-goalyn
+    image: postgres:17
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: goalyn
+      POSTGRES_PASSWORD: S9yvZQMjDHd4!JJjXz^ViK
+      POSTGRES_DB: goalyn

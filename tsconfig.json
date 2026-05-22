@@ -10,17 +10,18 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": ".",
+    "outDir": "./build",
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
+    "types": ["node"],
     "ignoreDeprecations": "6.0"
   },
   "include": [
-    "src"
+    ".",
   ]
 }

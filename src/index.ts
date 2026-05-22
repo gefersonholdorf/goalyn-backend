@@ -44,4 +44,5 @@ app.register(fastifyScalar, {
 	},
 });
 
+
 // app.register(mathRoutes, { prefix: "/api/v1"})
