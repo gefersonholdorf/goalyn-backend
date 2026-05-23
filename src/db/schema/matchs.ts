@@ -1,56 +1,76 @@
 import {
-  boolean,
-  integer,
-  numeric,
-  primaryKey,
-  text,
-  timestamp,
   uuid,
-  varchar,
-} from 'drizzle-orm/pg-core';
+  integer,
+  timestamp,
+  pgEnum,
+} from "drizzle-orm/pg-core";
 
+import { seasons } from "./seasons";
+import {
+  competitions,
+  competitionStages,
+  groups,
+} from "./competitions";
+
+import { teams } from "./teams";
 import { pgTable } from "drizzle-orm/pg-core";
-import { pgEnum } from "drizzle-orm/pg-core";
-import { teams } from './teams';
 
-export const matchStatusEnum = pgEnum('match_status', [
-  'PENDING',     // Pendente
-  'SCHEDULED',   // Agendado
-  'IN_PROGRESS', // Iniciado
-  'FINISHED',    // Finalizado
+export const matchStatusEnum = pgEnum("match_status", [
+  "PENDING",
+  "SCHEDULED",
+  "LIVE",
+  "FINISHED",
+  "CANCELLED",
 ]);
 
-/* =========================
-   MATCHES
-========================= */
+export const matches = pgTable("matches", {
+  id: uuid("id").defaultRandom().primaryKey(),
 
-export const matches = pgTable('matches', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  
-  // Times
-  homeTeamId: uuid('home_team_id')
-    .notNull()
-    .references(() => teams.id, { onDelete: 'cascade' }),
-  
-  awayTeamId: uuid('away_team_id')
-    .notNull()
-    .references(() => teams.id, { onDelete: 'cascade' }),
-  
-  // Placar
-  homeTeamGoals: integer('home_team_goals').default(0).notNull(),
-  awayTeamGoals: integer('away_team_goals').default(0).notNull(),
-  
-  // Status
-  status: matchStatusEnum('status')
-    .notNull()
-    .default('PENDING'),
-  
-  // Data da partida
-  matchDate: timestamp('match_date')
-    .notNull()
-    .defaultNow(),
-  
-  // Metadados
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  seasonId: uuid("season_id")
+    .references(() => seasons.id)
+    .notNull(),
+
+  competitionId: uuid("competition_id")
+    .references(() => competitions.id)
+    .notNull(),
+
+  stageId: uuid("stage_id")
+    .references(() => competitionStages.id)
+    .notNull(),
+
+  groupId: uuid("group_id")
+    .references(() => groups.id),
+
+  homeTeamId: uuid("home_team_id")
+    .references(() => teams.id)
+    .notNull(),
+
+  awayTeamId: uuid("away_team_id")
+    .references(() => teams.id)
+    .notNull(),
+
+  winnerTeamId: uuid("winner_team_id")
+    .references(() => teams.id),
+
+  homeScore: integer("home_score"),
+
+  awayScore: integer("away_score"),
+
+  round: integer("round"),
+
+  leg: integer("leg")
+    .default(1)
+    .notNull(),
+
+  status: matchStatusEnum("status")
+    .default("PENDING")
+    .notNull(),
+
+  scheduledAt: timestamp("scheduled_at"),
+
+  finishedAt: timestamp("finished_at"),
+
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
 });
