@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   postgresql:
     container_name: db-goalyn
     image: postgres:17
@@ -11,3 +12,10 @@ services:
       POSTGRES_USER: goalyn
       POSTGRES_PASSWORD: S9yvZQMjDHd4!JJjXz^ViK
       POSTGRES_DB: goalyn
+
+  redis:
+    container_name: redis-goalyn
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "6379:6379"

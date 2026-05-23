@@ -3,6 +3,8 @@ import { env } from "./env";
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler, type ZodTypeProvider } from "fastify-type-provider-zod";
 import fastifySwagger from "@fastify/swagger";
 import fastifyScalar from "@scalar/fastify-api-reference"
+import { db } from "./db";
+import { matches } from "./db/schema/matchs";
 
 export const app = fastify({
 	logger: env.APP !== "production",
