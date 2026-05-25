@@ -11,6 +11,7 @@ const getCompetitionByIdResponseSchema = z.object({
     slug: z.string().min(1).max(255),
     seasonId: z.uuid(),
     type: z.enum(["LEAGUE", "GROUP_KNOCKOUT", "KNOCKOUT"]),
+    status: z.enum(["DRAFT", "ACTIVE", "FINISHED", "SCHEDULED"])
 })
 
 export const getCompetitionByIdRoute = async (app: FastifyInstance) => {

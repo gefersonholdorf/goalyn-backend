@@ -25,6 +25,7 @@ export const createCompetitionsRoute = async (app: FastifyInstance) => {
             response: {
                 201: z.object({
                     message: z.string(),
+                    competitionId: z.uuid()
                 }),
                 400: z.object({
                     message: z.string(),
@@ -48,6 +49,9 @@ export const createCompetitionsRoute = async (app: FastifyInstance) => {
             return reply.status(400).send({ message: result.value.message });
         }
 
-        return reply.status(201).send({ message: "Competition successfully created." });
+        return reply.status(201).send({ 
+            message: "Competition successfully created.",
+            competitionId: result.value.competitionId
+        });
     });
 }

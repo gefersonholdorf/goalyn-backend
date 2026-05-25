@@ -9,8 +9,11 @@ export class DrizzleCompetitionsRepository implements CompetitionsRepository {
         private readonly db: DB
     ) {}
 
-    async create(data: CompetitionInsert): Promise<void> {
-        await this.db.insert(competitions).values(data);
+    async create(data: CompetitionInsert): Promise<{ competitionId: string }> {
+        const result = await this.db.insert(competitions).values(data).returning({ id: competitions.id });
+        return {
+            competitionId: result[0].id
+        }
     }
     async findById(id: string): Promise<Competition | null> {
         const competition = await this.db.select().from(competitions).where(eq(competitions.id, id)).limit(1);

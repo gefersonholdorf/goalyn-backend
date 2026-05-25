@@ -8,6 +8,6 @@ export type GetCompetitionByIdDetails = Omit<
 >;
 
 export interface CompetitionsRepository {
-    create(data: CompetitionInsert): Promise<void>
+    create(data: CompetitionInsert): Promise<{competitionId: string}>
     findById(id: string): Promise<GetCompetitionByIdDetails | null>
 }

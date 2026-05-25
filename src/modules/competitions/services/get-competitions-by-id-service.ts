@@ -11,6 +11,7 @@ interface GetCompetitionByIdServiceResponse {
     slug: string,
     seasonId: string
     type: "LEAGUE" | "GROUP_KNOCKOUT" | "KNOCKOUT"
+    status: "DRAFT" | "ACTIVE" | "FINISHED" | "SCHEDULED";
 }
 
 export class GetCompetitionByIdService

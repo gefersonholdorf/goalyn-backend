@@ -10,7 +10,7 @@ interface CreateCompetitionServiceRequest {
 }
 
 interface CreateCompetitionServiceResponse {
-	message: string;
+	competitionId: string;
 }
 
 export class CreateCompetitionService
@@ -30,7 +30,7 @@ export class CreateCompetitionService
 		try {
 			const { name, slug, seasonId, type } = request;
 
-			await this.competitionsRepository.create({
+			const competition = await this.competitionsRepository.create({
 				name,
 				slug,
 				seasonId,
@@ -38,7 +38,7 @@ export class CreateCompetitionService
 			});
 
 			return right({
-				message: "Competition successfully created.",
+				competitionId: competition.competitionId
 			});
 		} catch (error) {
 			return left(
