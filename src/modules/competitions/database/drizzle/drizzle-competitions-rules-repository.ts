@@ -1,4 +1,4 @@
-import { type DB } from "@/db";
+import { type DBClient } from "@/db";
 import { competitionRules } from "@/db/schema/competitions";
 import { eq } from "drizzle-orm";
 import type { CompetitionRules, CompetitionRulesInsert, CompetitionsRulesRepository } from "../repositories/competitions-rules-repository";
@@ -6,7 +6,7 @@ import type { CompetitionRules, CompetitionRulesInsert, CompetitionsRulesReposit
 export class DrizzleCompetitionsRulesRepository implements CompetitionsRulesRepository {
 
     constructor(
-        private readonly db: DB
+        private readonly db: DBClient
     ) {}
 
     async create(data: CompetitionRulesInsert): Promise<{ competitionRulesId: string }> {

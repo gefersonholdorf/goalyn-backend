@@ -117,6 +117,10 @@ export const competitionRules = pgTable("competition_rules", {
     .references(() => competitions.id)
     .notNull(),
 
+  quantityTeams: integer("quantity_teams")
+    .default(4)
+    .notNull(),
+
   pointsWin: integer("points_win")
     .default(3)
     .notNull(),

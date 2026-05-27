@@ -1,20 +1,33 @@
+import { db } from "@/db";
 import type { FastifyInstance } from "fastify";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 import { CreateCompetitionService } from "../services/create-competition-service";
-import { DrizzleCompetitionsRepository } from "../database/drizzle/drizzle-competitions-repository";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { db } from "@/db";
+
+const rulesBodySchema = z.object({
+    quantityTeams: z.number(),
+    pointsWin: z.number().int().nonnegative(),
+    pointsDraw: z.number().int().nonnegative(),
+    pointsLoss: z.number().int().nonnegative(),
+    homeAway: z.boolean(),
+    awayGoal: z.boolean(),
+    extraTime: z.boolean(),
+    penalties: z.boolean(),
+    teamsPerGroup: z.number().int().nonnegative(),
+    teamsAdvance: z.number().int().nonnegative()
+})
 
 const createCompetitionBodySchema = z.object({
     name: z.string().min(1).max(255),
     slug: z.string().min(1).max(255),
     seasonId: z.uuid(),
     type: z.enum(["LEAGUE", "GROUP_KNOCKOUT", "KNOCKOUT"]),
+    rules: rulesBodySchema,
+    teamsIds: z.array(z.uuid()).min(4)
 })
 
 export const createCompetitionsRoute = async (app: FastifyInstance) => {
-    const competitionRepository = new DrizzleCompetitionsRepository(db);
-    const createCompetitionService = new CreateCompetitionService(competitionRepository);
+    const createCompetitionService = new CreateCompetitionService(db);
 
     app.withTypeProvider<ZodTypeProvider>().post("/competitions", {
         schema: {
@@ -36,13 +49,15 @@ export const createCompetitionsRoute = async (app: FastifyInstance) => {
             },
         }
     }, async (request, reply) => {
-        const { name, slug, seasonId, type } = request.body;
+        const { name, slug, seasonId, type, rules, teamsIds } = request.body;
 
         const result = await createCompetitionService.execute({
             name,
             slug,
             seasonId,
-            type
+            type,
+            rules,
+            teamsIds
         });
 
         if (result.isLeft()) {

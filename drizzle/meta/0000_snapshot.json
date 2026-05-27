@@ -1,5 +1,5 @@
 {
-  "id": "a315fd40-1212-4d26-a989-7daa625f847e",
+  "id": "1e41b3d8-1d10-4065-8b80-1ed1b4b2f804",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -20,6 +20,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "quantity_teams": {
+          "name": "quantity_teams",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 4
         },
         "points_win": {
           "name": "points_win",

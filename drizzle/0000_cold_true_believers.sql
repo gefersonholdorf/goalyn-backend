@@ -11,6 +11,7 @@ CREATE TYPE "public"."season_status" AS ENUM('DRAFT', 'ACTIVE', 'FINISHED');--> 
 CREATE TABLE "competition_rules" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"competition_id" uuid NOT NULL,
+	"quantity_teams" integer DEFAULT 4 NOT NULL,
 	"points_win" integer DEFAULT 3 NOT NULL,
 	"points_draw" integer DEFAULT 1 NOT NULL,
 	"points_loss" integer DEFAULT 0 NOT NULL,

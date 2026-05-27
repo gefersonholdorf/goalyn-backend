@@ -5,18 +5,21 @@ import { DrizzleCompetitionsRepository } from "../database/drizzle/drizzle-compe
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { db } from "@/db";
 import { GetCompetitionByIdService } from "../services/get-competitions-by-id-service";
+import { DrizzleCompetitionsTeamsRepository } from "../database/drizzle/drizzle-competitions-teams-repository";
 
 const getCompetitionByIdResponseSchema = z.object({
+    seasonName: z.string(),
     name: z.string().min(1).max(255),
     slug: z.string().min(1).max(255),
-    seasonId: z.uuid(),
     type: z.enum(["LEAGUE", "GROUP_KNOCKOUT", "KNOCKOUT"]),
-    status: z.enum(["DRAFT", "ACTIVE", "FINISHED", "SCHEDULED"])
+    status: z.enum(["DRAFT", "ACTIVE", "FINISHED", "SCHEDULED"]),
+    teams: z.array(z.string())
 })
 
 export const getCompetitionByIdRoute = async (app: FastifyInstance) => {
     const competitionRepository = new DrizzleCompetitionsRepository(db);
-    const getCompetitionByIdService = new GetCompetitionByIdService(competitionRepository);
+    const competitionTeamsRepository = new DrizzleCompetitionsTeamsRepository(db);
+    const getCompetitionByIdService = new GetCompetitionByIdService(competitionRepository, competitionTeamsRepository);
 
     app.withTypeProvider<ZodTypeProvider>().get("/competitions/:id", {
         schema: {

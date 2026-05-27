@@ -1,7 +1,12 @@
 import { competitions } from '@/db/schema/competitions'
+import type { seasons } from '@/db/schema/seasons';
 
 export type CompetitionInsert = typeof competitions.$inferInsert;
-export type Competition = typeof competitions.$inferSelect;
+
+export type Competition = {
+    competition: typeof competitions.$inferSelect;
+    season: typeof seasons.$inferSelect;
+};
 export type GetCompetitionByIdDetails = Omit<
     Competition,
     "id" | "createdAt" | "updatedAt"
