@@ -26,7 +26,10 @@ export class DrizzleCompetitionsTeamsRepository implements CompetitionsTeamsRepo
         return teamsFound.map((team) => team.id)
     }
 
-    async findManyByCompetitionId(id: string): Promise<string[]> {
+    async findManyByCompetitionId(id: string): Promise<{
+        id: string
+        name: string
+    }[]> {
         const result = await this.db.select()
                                     .from(teams)
                                     .innerJoin(competitionTeams, eq(competitionTeams.teamId, teams.id))
@@ -36,6 +39,11 @@ export class DrizzleCompetitionsTeamsRepository implements CompetitionsTeamsRepo
             return []
         }
 
-        return result.map((item) => item.teams.name)
+        return result.map((item) => {
+            return {
+                id: item.teams.id,
+                name: item.teams.name
+            }
+        })
     }
 }

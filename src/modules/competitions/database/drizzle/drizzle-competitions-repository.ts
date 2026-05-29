@@ -23,7 +23,7 @@ export class DrizzleCompetitionsRepository implements CompetitionsRepository {
                                             .where(eq(competitions.id, id))
                                             .limit(1);
 
-        if (!competitionDetails) {
+        if (!competitionDetails[0]) {
             return null
         }
 

@@ -1,6 +1,7 @@
 import { type DBClient } from "@/db";
 import { competitionStages } from "@/db/schema/competitions";
-import type { CompetitionStagesInsert, CompetitionsStagesRepository } from "../repositories/competitions-stages-repository";
+import type { CompetitionStagesInsert, CompetitionsStagesRepository, GetCompetitionStagesByIdDetails } from "../repositories/competitions-stages-repository";
+import { eq } from "drizzle-orm";
 
 export class DrizzleCompetitionsStagesRepository implements CompetitionsStagesRepository {
 
@@ -13,5 +14,11 @@ export class DrizzleCompetitionsStagesRepository implements CompetitionsStagesRe
         return {
             competitionStagesId: result[0].id
         }
+    }
+
+    async findByCompetitionId(competitionId: string): Promise<GetCompetitionStagesByIdDetails[]> {
+        const result = await this.db.select().from(competitionStages).where(eq(competitionStages.competitionId, competitionId))
+
+        return result
     }
 }

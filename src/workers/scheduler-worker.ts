@@ -4,14 +4,14 @@ import { db } from "@/db";
 import { matches } from "@/db/schema/matchs";
 import { and, eq, lte } from "drizzle-orm";
 
-cron.schedule("*/30 * * * * *", async () => {
+cron.schedule("*/10 * * * * *", async () => {
   console.log("Verificando partidas agendadas...");
 
   const date = new Date()
   date.setHours(date.getHours() - 3) 
 
   const matchese = await db.select().from(matches).where(and(
-    eq(matches.status, "SCHEDULED"),
+    eq(matches.status, "PENDING"),
     lte(matches.scheduledAt, date)
   ));  
   

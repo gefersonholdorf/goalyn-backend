@@ -42,13 +42,15 @@ export class GetCompetitionByIdService
 
             const teams = await this.competitionsTeamsRepository.findManyByCompetitionId(competition.competition.id)
 
+            const teamsName = teams.map(item => item.name)
+
             return right({
                 seasonName: competition.season.name,
                 name: competition.competition.name,
                 slug: competition.competition.slug,
                 type: competition.competition.type,
                 status: competition.competition.status,
-                teams
+                teams: teamsName
             });
 
         } catch (error) {

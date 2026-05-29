@@ -6,6 +6,9 @@ import { eq } from "drizzle-orm";
 import { teamPlayers, teams } from "@/db/schema/teams";
 import { players } from "@/db/schema/players";
 import { playerAttributes } from "@/db/schema/players";
+import type { MatchEngineResponse } from "@/types/match";
+import { date } from "zod";
+import { RecalculateStandingsService } from "@/modules/competitions/services/recalculate-standings-service";
 
 interface MatchJobData {
   matchId: string;
@@ -220,16 +223,24 @@ export const matchWorker = new Worker(
       throw new Error(`Erro na simulação: ${simulationResponse.statusText}`);
     }
 
-    const simulationResult = await simulationResponse.json();
+    const simulationResult: MatchEngineResponse = await simulationResponse.json() as MatchEngineResponse;
     console.log("Resultado da simulação:", simulationResult);
+    console.log(simulationResult.teamOne, ' ', simulationResult.homeGoals, 'X', simulationResult.awayGoals, ' ', simulationResult.teamTwo)
 
-    // Extrai o placar do resultado da simulação
+    await db.update(matches).set({
+      homeScore: simulationResult.homeGoals,
+      awayScore: simulationResult.awayGoals,
+      status: 'FINISHED',
+    }).where(eq(matches.id, job.data.matchId))
 
-    /**
-     * Salva resultado
-     * Atualiza a partida com o placar e status FINISHED
-     */
+    const standingsService =
+      new RecalculateStandingsService(db)
 
+    await standingsService.execute({
+      competitionId: match.competitionId,
+      seasonId: match.seasonId,
+      stageId: match.stageId
+    })
 
   },
   {

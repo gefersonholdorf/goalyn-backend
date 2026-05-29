@@ -10,5 +10,8 @@ export type GetCompetitionTeamsManyDetails = Omit<
 export interface CompetitionsTeamsRepository {
     createMany(data: CompetitionTeamsInsertMany[]): Promise<void>
     findMany(ids: string[]): Promise<string[]>
-    findManyByCompetitionId(id: string): Promise<string[]>
+    findManyByCompetitionId(id: string): Promise<{
+        id: string
+        name: string
+    }[]>
 }
